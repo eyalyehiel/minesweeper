@@ -10,25 +10,45 @@
 </head>
 
 <body onload="initGame()">
-    <div class="header"><br/>
-        Minesweeper Game <br/><br/>
+    <div class="header"><br />
+        Minesweeper Game <br /><br />
         <span onclick="changeDifficulty(4,2)">Easy</span> |
         <span onclick="changeDifficulty(8,14)">Medium</span> |
         <span onclick="changeDifficulty(12,32)">Expert</span>
     </div>
+
     <div class="stats-bar">
-            <div class="heart"></div>
-            <div class="heart"></div>
-            <div class="heart last"></div>
-            <div class="timer"></div>
+        <div class="lives-counter">
+            <div class="heart beat"></div>
+            <div class="heart beat"></div>
+            <div class="heart last beat"></div>
+        </div>
+        <div class="icon">
+            <div class="icon-btn" onclick="restartGame()"></div>
+        </div>
+        <div class="timer"><span class="show-time"></span></div>
     </div>
-        
-    <br/>
+
+    <div class="tools">
+        <div class="hints">
+            <span class="hints-counter"></span> <br/>
+            <button class="tools-btn" onclick="getHint()">Get Hint</button>
+        </div>
+        <div class="safe-click">
+            <span class="safe-click-counter"></span> <br/>
+            <button class="tools-btn" onclick="getSafeClick()">Safe Click</button>
+        </div>
+        <div class="best-score">
+            Soon
+        </div>
+    </div>
+
     <table border="1">
         <tbody>
 
         </tbody>
     </table>
+
     <script src="js/script.js"></script>
     <script src="js/util.js"></script>
 </body>

@@ -1,6 +1,6 @@
 body {
-    background-color: black;
-    color: green;
+    background-color: rgb(0, 0, 0);
+    /* color: green; */
     font-weight: bold;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
@@ -8,20 +8,23 @@ body {
 
 .header {
     color: azure;
-    background-color: rgb(97, 97, 97);
+    background: linear-gradient(181deg, #F3EAEA 0%, #616161 82%);
     box-shadow: 0px 0px 8px 2px #fcfcfc inset;
     width: 60%;
     height: 90px;
     font-size: large;
     margin: auto;
+    border-radius: 5px;
 
 }
 .header span {
     font-size: small;
     color: black;
     text-shadow: 0px 0px 4px #BFBFBF;
+    cursor: pointer;
 
 }
+
 table {
     margin: auto;
 }
@@ -31,9 +34,6 @@ td {
     height: 36px;
     background-color: gray;
 }
-
-/* .cell {
-} */
 
 .clickedCell {
     background-color: rgb(138, 138, 138);
@@ -54,32 +54,119 @@ td {
     box-shadow: 0px 0px 8px 2px #fcfcfc inset
 }
 
-.timer {
-    display: inline-block;
-}
-
 .stats-bar {
     color: azure;
-    background-color: rgb(97, 97, 97);
+    background: linear-gradient(181deg, #F3EAEA 0%, #616161 82%);
     box-shadow: 0px 0px 8px 2px #fcfcfc inset;
     width: 60%;
-    height: 40px;
+    height: 45px;
     font-size: large;
     margin: auto;
-    padding-top: 10px;
-    padding-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+.lives-counter, .icon, .timer {
+    width: 33%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
 }
 
 .heart {
-    margin-top: 10px;
     background-image: url(../img/heart.png);
     background-repeat: no-repeat;
     background-size: contain;
     width: 36px;
     height: 36px;
-    display: inline-block;
 }
 
-.last {
-    margin-right: 240px;
+.beat {
+    animation: myAnim 1s ease 0s infinite normal backwards;
+}
+@keyframes myAnim {
+	0% {
+		animation-timing-function: ease-out;
+		transform: scale(1);
+		transform-origin: center center;
+	}
+
+	10% {
+		animation-timing-function: ease-in;
+		transform: scale(0.91);
+	}
+
+	17% {
+		animation-timing-function: ease-out;
+		transform: scale(0.98);
+	}
+
+	33% {
+		animation-timing-function: ease-in;
+		transform: scale(0.87);
+	}
+
+	45% {
+		animation-timing-function: ease-out;
+		transform: scale(1);
+	}
+}
+
+.icon-btn {
+    background-image: url(../img/happiness.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+}
+
+.tools {
+    color: azure;
+    background: linear-gradient(181deg, #F3EAEA 0%, #616161 82%);
+    box-shadow: 0px 0px 8px 2px #fcfcfc inset;
+    width: 60%;
+    height: 90px;
+    font-size: large;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-content: space-around;
+}
+
+.hints, .safe-click, .best-score {
+    width: 25%;
+    height: 65px;
+    padding-top: 7px;
+}
+
+.tools-btn {
+    color: white;
+    background-color: #242424;
+    border-radius: 25px;
+}
+
+.mark {
+    background-image: url(../img/shield.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: myMark 1s ease-in 0s infinite normal none;
+}
+
+@keyframes myMark {
+	0%,
+	50%,
+	100% {
+		opacity: 1;
+	}
+
+	25%,
+	75% {
+		opacity: 0;
+	}
 }
