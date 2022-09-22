@@ -162,7 +162,7 @@ function cellClicked(elCell, i, j) {
 // marking a cell
 function cellMarked(elCell, i, j) {
     if (!gGame.isOn) return
-
+    if (gBoard[i][j].isShown && !gBoard[i][j].isMine) return
     elCell.classList.add('flag')
     gBoard[i][j].isMarked = true
 
