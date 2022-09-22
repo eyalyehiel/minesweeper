@@ -311,6 +311,7 @@ function revealAllMines() {
 // get a safe click
 function getSafeClick() {
     if(!gGame.isOn) return
+    
     if(gGame.safeClicks === 0) return
 
     var pos = getEmptyCell(gBoard)

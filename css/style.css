@@ -41,14 +41,14 @@ td {
 }
 
 .mine {
-    background-image: url(img/mine.png);
+    background-image: url(../img/mine.png);
     background-repeat: no-repeat;
     background-size: contain;
     box-shadow: 0px 0px 8px 2px #fcfcfc inset
 }
 
 .flag {
-    background-image: url(img/red-flag.png);
+    background-image: url(../img/red-flag.png);
     background-repeat: no-repeat;
     background-size: contain;
     box-shadow: 0px 0px 8px 2px #fcfcfc inset
@@ -78,7 +78,7 @@ td {
 }
 
 .heart {
-    background-image: url(img/heart.png);
+    background-image: url(../img/heart.png);
     background-repeat: no-repeat;
     background-size: contain;
     width: 36px;
@@ -117,7 +117,7 @@ td {
 }
 
 .icon-btn {
-    background-image: url(img/happiness.png);
+    background-image: url(../img/happiness.png);
     background-repeat: no-repeat;
     background-size: contain;
     width: 36px;
@@ -152,7 +152,7 @@ td {
 }
 
 .mark {
-    background-image: url(img/shield.png);
+    background-image: url(../img/shield.png);
     background-repeat: no-repeat;
     background-size: contain;
     animation: myMark 1s ease-in 0s infinite normal none;
