@@ -262,12 +262,12 @@ function expandShown(rowIdx, colIdx) {
 // changes the difficulty of the game
 function changeDifficulty(size, mines) {
     var elIcon = document.querySelector('.icon-btn')
-    elIcon.style.backgroundImage = "url('../img/happiness.png')"
+    elIcon.style.backgroundImage = "url('img/happiness.png')"
 
     var hearts = document.querySelectorAll('.heart')
     for (var i = 0; i < 3; i++) {
         var currHeart = hearts[i]
-        currHeart.style.backgroundImage = "url('../img/heart.png')"
+        currHeart.style.backgroundImage = "url('img/heart.png')"
         currHeart.classList.add('beat')
     }
 
