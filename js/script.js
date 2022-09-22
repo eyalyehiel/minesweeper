@@ -117,7 +117,7 @@ function cellClicked(elCell, i, j) {
             setTimeout(revealCells,1000,i,j)
         }
         var elIcon = document.querySelector('.icon-btn')
-        elIcon.style.backgroundImage = "url('../img/happiness.png')"
+        elIcon.style.backgroundImage = "url('img/happiness.png')"
         gGame.hintMode = false
         return
     }
@@ -126,7 +126,7 @@ function cellClicked(elCell, i, j) {
         if (gGame.lives > 0) {
             var hearts = document.querySelectorAll('.heart')
             var currHeart = hearts[gGame.lives - 1]
-            currHeart.style.backgroundImage = "url('../img/heart-lost.png')"
+            currHeart.style.backgroundImage = "url('img/heart-lost.png')"
             currHeart.classList.remove('beat')
             gBoard[i][j].isShown = true
             gGame.lives--
@@ -221,7 +221,7 @@ function checkGameOver() {
 
     if (gGame.lives === 0) {
         gGame.isOn = false
-        elIcon.style.backgroundImage = "url('../img/mind-blown.png')"
+        elIcon.style.backgroundImage = "url('img/mind-blown.png')"
         clearInterval(gTimerInterval)
     }
     console.log(gGame.markedCount)
@@ -231,7 +231,7 @@ function checkGameOver() {
         clearInterval(gTimerInterval)
         gGame.isOn = false
         console.log('You won')
-        elIcon.style.backgroundImage = "url('../img/star.png')"
+        elIcon.style.backgroundImage = "url('img/star.png')"
     }
 }
 //when cell is clicked show his negs that are not mines
@@ -332,7 +332,7 @@ function getHint() {
     if(gGame.hintCount === 0) return
 
     var elIcon = document.querySelector('.icon-btn')
-    elIcon.style.backgroundImage = "url('../img/lamp.png')"
+    elIcon.style.backgroundImage = "url('img/lamp.png')"
     gGame.hintMode = true
     gGame.hintCount-- 
     var elHintSpan = document.querySelector('.hints-counter')
