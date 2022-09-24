@@ -19,7 +19,9 @@ function initGame() {
         lives: 3,
         hintMode: false,
         hintCount: 3,
+        safeClickMode: false,
         safeClicks: 3,
+        useExterminator: false,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0
@@ -109,12 +111,12 @@ function cellClicked(elCell, i, j) {
         startTimer()
     }
 
-    if(gBoard[i][j].isMine && gBoard[i][j].isShown) return
+    if (gBoard[i][j].isMine && gBoard[i][j].isShown) return
 
-    if(gGame.hintMode) {
-        if(!gBoard[i][j].isShown) {
-            revealCells(i,j)
-            setTimeout(revealCells,1000,i,j)
+    if (gGame.hintMode) {
+        if (!gBoard[i][j].isShown) {
+            revealCells(i, j)
+            setTimeout(revealCells, 1000, i, j)
         }
         var elIcon = document.querySelector('.icon-btn')
         elIcon.style.backgroundImage = "url('img/happiness.png')"
@@ -147,9 +149,9 @@ function cellClicked(elCell, i, j) {
         elCell.classList.remove('flag')
         elCell.classList.add('clickedCell')
         elCell.innerText = gBoard[i][j].minesAroundCount ? gBoard[i][j].minesAroundCount : ''
-        if(gBoard[i][j].minesAroundCount === 1) elCell.style.color = 'blue'
-        if(gBoard[i][j].minesAroundCount === 2) elCell.style.color = 'green'
-        if(gBoard[i][j].minesAroundCount > 2) elCell.style.color = 'red'
+        if (gBoard[i][j].minesAroundCount === 1) elCell.style.color = 'blue'
+        if (gBoard[i][j].minesAroundCount === 2) elCell.style.color = 'green'
+        if (gBoard[i][j].minesAroundCount > 2) elCell.style.color = 'red'
         gGame.shownCount++
     } else {
         expandShown(i, j)
@@ -196,8 +198,18 @@ function getRandomPos(board) {
     for (var i = 0; i < board.length; i++) {
 
         for (var j = 0; j < board.length; j++) {
-
             var currCell = board[i][j]
+
+            if (gGame.safeClickMode) {
+                if (!currCell.isShown && !currCell.isMine) emptyCells.push({ i, j })
+                continue
+            }
+
+            if (gGame.useExterminator) {
+                if (currCell.isMine) emptyCells.push({ i, j })
+                continue
+            }
+
             if (!currCell.isMine) emptyCells.push({ i, j })
         }
 
@@ -251,9 +263,9 @@ function expandShown(rowIdx, colIdx) {
                 elCurrCell.classList.add('clickedCell')
                 gGame.shownCount++
                 elCurrCell.innerText = currCell.minesAroundCount ? currCell.minesAroundCount : ''
-                if(currCell.minesAroundCount === 1) elCurrCell.style.color = 'blue'
-                if(currCell.minesAroundCount === 2) elCurrCell.style.color = 'green'
-                if(currCell.minesAroundCount > 2) elCurrCell.style.color = 'red'
+                if (currCell.minesAroundCount === 1) elCurrCell.style.color = 'blue'
+                if (currCell.minesAroundCount === 2) elCurrCell.style.color = 'green'
+                if (currCell.minesAroundCount > 2) elCurrCell.style.color = 'red'
 
             }
         }
@@ -271,7 +283,7 @@ function changeDifficulty(size, mines) {
         currHeart.classList.add('beat')
     }
 
-    
+
     gLevel = { SIZE: size, MINES: mines }
     gBoard = buildBoard()
     console.table(gBoard)
@@ -283,7 +295,9 @@ function changeDifficulty(size, mines) {
         hintMode: false,
         lives: 3,
         hintCount: 3,
+        safeClickMode: false,
         safeClicks: 3,
+        useExterminator: false,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0
@@ -293,6 +307,8 @@ function changeDifficulty(size, mines) {
     elHintSpan.innerText = gGame.hintCount
     var elSafeClickSpan = document.querySelector('.safe-click-counter')
     elSafeClickSpan.innerText = gGame.safeClicks
+    var elExterminatorBtn = document.querySelector('.mine-ext')
+    elExterminatorBtn.disabled = false
     renderBoard(gBoard)
 }
 
@@ -310,18 +326,21 @@ function revealAllMines() {
 
 // get a safe click
 function getSafeClick() {
-    if(!gGame.isOn) return
-    
-    if(gGame.safeClicks === 0) return
+    if (!gGame.isOn) return
 
-    var pos = getEmptyCell(gBoard)
+    if (gGame.safeClicks === 0) return
+
+    gGame.safeClickMode = true
+    var pos = getRandomPos(gBoard)
     var elCell = document.querySelector(`.c${pos.i}-${pos.j}`)
     elCell.classList.toggle('mark')
     setTimeout(() => {
         elCell.classList.toggle('mark')
 
-    },3000)
+    }, 3000)
     gGame.safeClicks--
+
+    gGame.safeClickMode = false
 
     var elSafeClickSpan = document.querySelector('.safe-click-counter')
     elSafeClickSpan.innerText = gGame.safeClicks
@@ -329,13 +348,13 @@ function getSafeClick() {
 
 // get hint
 function getHint() {
-    if(!gGame.isOn) return
-    if(gGame.hintCount === 0) return
+    if (!gGame.isOn) return
+    if (gGame.hintCount === 0) return
 
     var elIcon = document.querySelector('.icon-btn')
     elIcon.style.backgroundImage = "url('img/lamp.png')"
     gGame.hintMode = true
-    gGame.hintCount-- 
+    gGame.hintCount--
     var elHintSpan = document.querySelector('.hints-counter')
     elHintSpan.innerText = gGame.hintCount
 
@@ -364,42 +383,38 @@ function restartGame() {
 }
 
 //reveal cell when its hint mode
-function revealCells(rowIdx,colIdx) {
+function revealCells(rowIdx, colIdx) {
     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
         if (i < 0 || i >= gBoard.length) continue
 
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j >= gBoard[i].length) continue
-            
+
             var currCell = gBoard[i][j]
             var elCurrCell = document.querySelector(`.c${i}-${j}`)
-                if(currCell.isMine) {
-                    elCurrCell.classList.toggle('mine')
-                } else if(!currCell.isShown) {
-                    elCurrCell.classList.toggle('cell')
-                    elCurrCell.classList.toggle('clickedCell')
-                    // elCurrCell.innerText = currCell.minesAroundCount ? currCell.minesAroundCount : ''    
-                }
+            if (currCell.isMine) {
+                elCurrCell.classList.toggle('mine')
+            } else if (!currCell.isShown) {
+                elCurrCell.classList.toggle('cell')
+                elCurrCell.classList.toggle('clickedCell')
+            }
         }
     }
 }
 
-// get empty cell unrevealed
-function getEmptyCell(board) {
-    var emptyCells = []
+function useMineExterminator(elBtn) {
 
-    for (var i = 0; i < board.length; i++) {
-
-        for (var j = 0; j < board.length; j++) {
-
-            var currCell = board[i][j]
-            if (!currCell.isShown && !currCell.isMine) emptyCells.push({ i, j })
-        }
-
+    gGame.useExterminator = true
+    
+    for (var i = 0; i < 3; i++) {
+        var currMine = getRandomPos(gBoard)
+        console.log('currMine',currMine)
+        gBoard[currMine.i][currMine.j].isMine = false
     }
+    gGame.useExterminator = false
+    updateMinesNegsCount(gBoard)
 
-    var idx = getRandomInt(0, emptyCells.length)
-    return emptyCells[idx]
+    elBtn.disabled = true
 }
 
 document.addEventListener("contextmenu", function (event) { event.preventDefault(); }, false);
