@@ -5,6 +5,8 @@ var gBoard
 var gGame
 var gFirstClick
 var gTimerInterval
+var firstPos
+var secondPos
 
 
 function initGame() {
@@ -22,6 +24,8 @@ function initGame() {
         safeClickMode: false,
         safeClicks: 3,
         useExterminator: false,
+        megaHintMode: false,
+        countMegaHintClicks: 0,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0
@@ -112,6 +116,7 @@ function cellClicked(elCell, i, j) {
     }
 
     if (gBoard[i][j].isMine && gBoard[i][j].isShown) return
+    if (gBoard[i][j].isShown) return
 
     if (gGame.hintMode) {
         if (!gBoard[i][j].isShown) {
@@ -122,6 +127,22 @@ function cellClicked(elCell, i, j) {
         elIcon.style.backgroundImage = "url('img/happiness.png')"
         gGame.hintMode = false
         return
+    }
+
+    if (gGame.megaHintMode) {
+        if (gGame.countMegahintClicks === 0) {
+            firstPos = { i, j }
+            gGame.countMegahintClicks++
+            return
+        }
+        if (gGame.countMegahintClicks === 1) {
+            secondPos = { i, j }
+            useMegaHint(firstPos, secondPos)
+            setTimeout(useMegaHint, 2000, firstPos, secondPos)
+            gGame.megaHintMode = false
+            return
+        }
+
     }
 
     if (gBoard[i][j].isMine) {
@@ -222,6 +243,10 @@ function getRandomPos(board) {
 // detect if player clicked right or left button than excute function
 function WhichButton(event, elCell, i, j) {
 
+    if (gGame.megaHintMode) {
+        useMegaHint(elCell, i, j)
+    }
+
     if (event.button === 0) cellClicked(elCell, i, j)
     else if (event.button === 2) cellMarked(elCell, i, j)
 
@@ -231,6 +256,9 @@ function WhichButton(event, elCell, i, j) {
 function checkGameOver() {
     var elIcon = document.querySelector('.icon-btn')
 
+    // this variable check if mine extarminator used to change the calculating of the game 
+    var MineExtUsed = gGame.useExterminator ? 3 : 0
+
     if (gGame.lives === 0) {
         gGame.isOn = false
         elIcon.style.backgroundImage = "url('img/mind-blown.png')"
@@ -238,8 +266,8 @@ function checkGameOver() {
     }
     console.log(gGame.markedCount)
     console.log(gGame.shownCount);
-    if (gGame.markedCount === gLevel.MINES &&
-        gGame.shownCount === gLevel.SIZE * gLevel.SIZE - gLevel.MINES) {
+    if (gGame.markedCount + MineExtUsed === gLevel.MINES &&
+        gGame.shownCount === (gLevel.SIZE * gLevel.SIZE - gLevel.MINES) + MineExtUsed) {
         clearInterval(gTimerInterval)
         gGame.isOn = false
         console.log('You won')
@@ -298,6 +326,8 @@ function changeDifficulty(size, mines) {
         safeClickMode: false,
         safeClicks: 3,
         useExterminator: false,
+        megaHintMode: false,
+        countMegahintClicks: 0,
         shownCount: 0,
         markedCount: 0,
         secsPassed: 0
@@ -309,6 +339,9 @@ function changeDifficulty(size, mines) {
     elSafeClickSpan.innerText = gGame.safeClicks
     var elExterminatorBtn = document.querySelector('.mine-ext')
     elExterminatorBtn.disabled = false
+    var elMegaHintBtn = document.querySelector('.mega-hint')
+    elMegaHintBtn.disabled = false
+
     renderBoard(gBoard)
 }
 
@@ -405,16 +438,40 @@ function revealCells(rowIdx, colIdx) {
 function useMineExterminator(elBtn) {
 
     gGame.useExterminator = true
-    
+
     for (var i = 0; i < 3; i++) {
         var currMine = getRandomPos(gBoard)
-        console.log('currMine',currMine)
+        console.log('currMine', currMine)
         gBoard[currMine.i][currMine.j].isMine = false
     }
-    gGame.useExterminator = false
     updateMinesNegsCount(gBoard)
 
     elBtn.disabled = true
+}
+
+function getMegaHint(elBtn) {
+    gGame.megaHintMode = true
+    elBtn.disabled = true
+
+}
+
+function useMegaHint(firstPos, secondPos) {
+
+    for (var i = firstPos.i; i <= secondPos.i; i++) {
+
+        for (var j = firstPos.j; j <= secondPos.j; j++) {
+
+            var currCell = gBoard[i][j]
+            var elCurrCell = document.querySelector(`.c${i}-${j}`)
+            if (currCell.isMine) {
+                elCurrCell.classList.toggle('mine')
+            } else if (!currCell.isShown) {
+                elCurrCell.classList.toggle('cell')
+                elCurrCell.classList.toggle('clickedCell')
+            }
+        }
+    }
+
 }
 
 document.addEventListener("contextmenu", function (event) { event.preventDefault(); }, false);
